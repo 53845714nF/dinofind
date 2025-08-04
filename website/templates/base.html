@@ -1,43 +1,124 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Image Search</title>
-</head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex">
-                    <div class="flex-shrink-0 flex items-center">
-                        <a href="/" class="text-2xl font-bold text-indigo-600">Image Search</a>
-                    </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="/image" class="{% if active_page == 'image' %}border-b-2 border-indigo-500 text-gray-900{% else %}text-gray-500 hover:text-gray-900{% endif %} inline-flex items-center px-1 pt-1 text-sm font-medium">
-                            Search
-                        </a>
+    <script src="{{ url_for('static', filename='js/tailwind.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lucide.js') }}"></script>
+    <title>Dinofind</title>
 
-                    </div>
-                </div>
+    <!-- Standard-Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
+
+    <!-- ICO-Fallback -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon-32x32.ico') }}" type="image/x-icon">
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="57x57"
+        href="{{ url_for('static', filename='favicon/apple-touch-icon-57x57.png') }}">
+    <link rel="apple-touch-icon" sizes="60x60"
+        href="{{ url_for('static', filename='favicon/apple-touch-icon-60x60.png') }}">
+    <link rel="apple-touch-icon" sizes="72x72"
+        href="{{ url_for('static', filename='favicon/apple-touch-icon-72x72.png') }}">
+    <link rel="apple-touch-icon" sizes="76x76"
+        href="{{ url_for('static', filename='favicon/apple-touch-icon-76x76.png') }}">
+    <link rel="apple-touch-icon" sizes="114x114"
+        href="{{ url_for('static', filename='favicon/apple-touch-icon-114x114.png') }}">
+    <link rel="apple-touch-icon" sizes="120x120"
+        href="{{ url_for('static', filename='favicon/apple-touch-icon-120x120.png') }}">
+    <link rel="apple-touch-icon" sizes="144x144"
+        href="{{ url_for('static', filename='favicon/apple-touch-icon-144x144.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152"
+        href="{{ url_for('static', filename='favicon/apple-touch-icon-152x152.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="{{ url_for('static', filename='favicon/apple-touch-icon-180x180.png') }}">
+
+    <!-- Android Icon -->
+    <link rel="icon" type="image/png" sizes="192x192"
+        href="{{ url_for('static', filename='favicon/android-icon-192x192.png') }}">
+
+    <!-- Windows Metro Tiles -->
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{ url_for('static', filename='favicon/mstile-150x150.png') }}">
+    <meta name="msapplication-square70x70logo" content="{{ url_for('static', filename='favicon/mstile-70x70.png') }}">
+    <meta name="msapplication-square310x310logo"
+        content="{{ url_for('static', filename='favicon/mstile-310x310.png') }}">
+
+    <!-- Theme Color für Chrome, Firefox OS und Opera -->
+    <meta name="theme-color" content="#ffffff">
+</head>
+
+<body class="min-h-screen flex flex-col justify-between">
+    <nav class="bg-white shadow pt-5 pb-3">
+        <div class="max-w-screen-xl mx-auto px-7 flex items-center gap-x-28">
+            <div class="flex items-center space-x-1">
+                <img src="{{ url_for('static', filename='img/logo_transparent.png') }}" alt="DinoFind Logo" class="h-10 w-10">
+                <span class="text-xl font-semibold text-gray-800">DinoFind</span>
+            </div>
+
+            <div class="flex space-x-6">
+                <a href="/" class="text-blue-700 text-lg hover:underline">Search</a>
+                <a href="/technology" class="text-blue-700 text-lg hover:underline">Technology</a>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <main class="flex-grow flex items-center justify-center max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {% block main %}{% endblock %}
     </main>
 
     <!-- Error Message -->
     {% if error_message %}
-        <div class="fixed bottom-0 right-0 m-8">
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                <span class="block sm:inline">{{ error_message }}</span>
+    <div class="fixed bottom-0 right-0 m-8">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ error_message }}</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-200">
+        <div class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-3 gap-8 text-sm">
+
+            <div class="text-center sm:text-left">
+                <h2 class="text-base font-semibold mb-4"><a href="/how-search-works">Legal</a></h2>
+                <ul class="space-y-2">
+                    <li><a href="/privacy" class="hover:underline">Privacy Policy</a></li>
+                    <li><a href="/datenschutz" class="hover:underline">Datenschutz</a></li>
+                </ul>
+            </div>
+
+            <div class="text-center">
+                <h2 class="text-base font-semibold mb-4">Contacts</h2>
+                <div class="flex justify-center space-x-6">
+                    <a href="https://www.linkedin.com/in/sebastian-feustel" class="hover:text-white"
+                        aria-label="LinkedIn">
+                        <i data-lucide="linkedin" class="w-5 h-5">LinkedIn</i>
+                    </a>
+                    <a href="https://github.com/53845714nF/dinofind" class="hover:text-white" aria-label="GitHub">
+                        <i data-lucide="github" class="w-5 h-5"></i>
+                    </a>
+                    <a href="mailto:dinofind.chooser146@passinbox.com" class="hover:text-white" aria-label="E-Mail">
+                        <i data-lucide="mail" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="text-center sm:text-right">
+                <h2 class="text-base font-semibold mb-4">Copyright</h2>
+                <p class="text-sm">&copy; 2025 Sebastian Feustel</p>
             </div>
         </div>
-    {% endif %}
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
+
 </html>
