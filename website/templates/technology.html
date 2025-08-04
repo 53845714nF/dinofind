@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block main %}
+
+<div class="max-w-2xl sm:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <ol class="relative border-l-2 sm:border-l-4 border-gray-300">
+        <li class="mb-8 sm:mb-10 lg:mb-12 ml-4 sm:ml-6 lg:ml-8">
+            <span
+                class="absolute -left-3 sm:-left-4 lg:-left-6 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gray-700 rounded-full ring-4 sm:ring-6 lg:ring-8 ring-white">
+                <img src="{{ url_for('static', filename='img/kaggle.png') }}" alt="Kaggle Logo"
+                    class="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8">
+            </span>
+            <h3
+                class="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900">
+                <a href="https://www.kaggle.com/datasets/adityajn105/flickr30k" target="_blank"
+                    class="flex items-center gap-2 sm:gap-3 hover:underline">Kaggle</a>
+            </h3>
+            <p class="text-gray-600 text-sm sm:text-base lg:text-lg">30,000 Flickr images serve as the starting point for the image search.</p>
+        </li>
+        <li class="mb-8 sm:mb-10 lg:mb-12 ml-4 sm:ml-6 lg:ml-8">
+            <span
+                class="absolute -left-3 sm:-left-4 lg:-left-6 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-blue-600 rounded-full ring-4 sm:ring-6 lg:ring-8 ring-white">
+                <img src="{{ url_for('static', filename='img/meta.png') }}" alt="Meta Logo"
+                    class="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8">
+            </span>
+            <h3 class="mb-1 sm:mb-2 text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900">
+                <a href="https://github.com/facebookresearch/dinov2" target="_blank" class="hover:underline">DINOv2</a>
+            </h3>
+            <p class="text-gray-600 text-sm sm:text-base lg:text-lg">Image Vectorizer converts images into high-dimensional embeddings using Vision Transformer.</p>
+        </li>
+        <li class="mb-8 sm:mb-10 lg:mb-12 ml-4 sm:ml-6 lg:ml-8">
+            <span
+                class="absolute -left-3 sm:-left-4 lg:-left-6 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-purple-600 rounded-full ring-4 sm:ring-6 lg:ring-8 ring-white">
+                <img src="{{ url_for('static', filename='img/qdrant.png') }}" alt="Qdrant"
+                    class="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8">
+            </span>
+            <h3 class="mb-1 sm:mb-2 text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900">
+                <a href="https://github.com/qdrant/qdrant" target="_blank" class="hover:underline">Qdrant</a>
+            </h3>
+            <p class="text-gray-600 text-sm sm:text-base lg:text-lg">Vector Database stores the embeddings for fast similarity searches</p>
+        </li>
+        <li class="mb-8 sm:mb-10 lg:mb-12 ml-4 sm:ml-6 lg:ml-8">
+            <span
+                class="absolute -left-3 sm:-left-4 lg:-left-6 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-red-700 rounded-full ring-4 sm:ring-6 lg:ring-8 ring-white">
+                <img src="{{ url_for('static', filename='img/minio.png') }}" alt="MinIO"
+                    class="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8">
+            </span>
+            <h3 class="mb-1 sm:mb-2 text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900">
+                <a href="https://github.com/minio/minio" target="_blank" class="hover:underline">MinIO</a>
+            </h3>
+            <p class="text-gray-600 text-sm sm:text-base lg:text-lg">Object Storage stores the original images in an S3-compatible bucket.</p>
+        </li>
+        <li class="mb-8 sm:mb-10 lg:mb-12 ml-4 sm:ml-6 lg:ml-8">
+            <span
+                class="absolute -left-3 sm:-left-4 lg:-left-6 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-cyan-700 rounded-full ring-4 sm:ring-6 lg:ring-8 ring-white">
+                <img src="{{ url_for('static', filename='img/flask.png') }}" alt="Flask"
+                    class="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8">
+            </span>
+            <h3 class="mb-1 sm:mb-2 text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900">
+                <a href="https://github.com/pallets/flask" target="_blank" class="hover:underline">Flask</a>
+            </h3>
+            <p class="text-gray-600 text-sm sm:text-base lg:text-lg">Serves as an HTTP server for searching and displaying results.</p>
+        </li>
+        <li class="ml-4 sm:ml-6 lg:ml-8">
+            <span
+                class="absolute -left-3 sm:-left-4 lg:-left-6 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gray-800 rounded-full ring-4 sm:ring-6 lg:ring-8 ring-white">
+                <img src="{{ url_for('static', filename='img/tailwind.png') }}" alt="Tailwind CSS"
+                    class="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8">
+            </span>
+            <h3 class="mb-1 sm:mb-2 text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900">
+                <a href="https://tailwindcss.com" target="_blank" class="hover:underline">Tailwind CSS</a>
+            </h3>
+            <p class="text-gray-600 text-sm sm:text-base lg:text-lg">Ensures a modern design of the user interface.</p>
+        </li>
+    </ol>
+</div>
+
+
+{% endblock %}

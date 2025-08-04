@@ -1,24 +1,30 @@
 from os import getenv, path, remove
 from datetime import datetime as dt
+from random import choices
+from string import ascii_letters, digits
 
 # Third Party modules
 from flask import Flask, render_template, request, Request
 from werkzeug.utils import secure_filename
-from qdrant_client import QdrantClient, models
-from qdrant_client.http import models
+from qdrant_client import QdrantClient
 
 # Own modules
-from vectorizer.main import gen_vector
+from vectorizer import gen_vector
 
+random_string = ''.join(choices(ascii_letters + digits, k=12))
 
-COLLECTION_NAME = "Images"
+COLLECTION_NAME = "images"
 QDRANT_HOST = getenv('QDRANT_HOST', 'localhost')  # 'qdrant' ist der Service-Name
-QDRANT_PORT = getenv('QDRANT_PORT', 6333)
-FLASK_DEBUG = getenv('FLAKS_DEBUG', bool('False'))
+QDRANT_PORT = getenv('QDRANT_PORT', '6333')
+QDRANT_API_KEY = getenv('QDRANT_API_KEY', None)
 
-client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
+FLASK_DEBUG = getenv('FLASK_DEBUG', bool(''))
+FLASK_SECRET_KEY = getenv('FLASK_SECRET_KEY', random_string)
+
+qdrant_client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT, api_key=QDRANT_API_KEY)
 
 app = Flask(__name__, template_folder='templates', static_folder='statics')
+app.config['SECRET_KEY'] = FLASK_SECRET_KEY
 app.config['UPLOAD_FOLDER'] = path.join('statics', 'uploads')
 app.config['UPLOAD_EXTENSIONS'] = ['jpg', 'jpeg', 'png', 'gif']
 
@@ -62,17 +68,37 @@ def get_image_count():
     """
     Get the number of images in the collection (Qdrant).
     """
-    collection_info = client.get_collection(COLLECTION_NAME)
+    collection_info = qdrant_client.get_collection(COLLECTION_NAME)
     return collection_info.points_count
 
 
-@app.route("/", methods=['GET'])
+@app.route('/', methods=['GET'])
 def home():
     """
     Render the home page.
     """
-    return render_template('home.html', image_count=get_image_count())
+    return render_template('search.html', image_count=get_image_count())
 
+@app.route('/privacy', methods=['GET'])
+def privacy():
+    """
+    Render privacy Page
+    """
+    return render_template('privacy.html')
+
+@app.route('/datenschutz', methods=['GET'])
+def datenschutz():
+    """
+    Render Datenschutz Page
+    """
+    return render_template('datenschutz.html')
+
+@app.route('/technology', methods=['GET'])
+def technology():
+    """
+    Render technology Page
+    """
+    return render_template('technology.html')
 
 @app.route('/image', methods=['GET', 'POST'])
 def upload_search():
@@ -81,28 +107,29 @@ def upload_search():
     """
 
     if request.method == 'POST':
-        limit = get_limit(request)
 
         try:
+            limit = get_limit(request)
             filename = get_image(request)
         except Exception as e:
-            return render_template('image_search.html', error_message=e)
+            return render_template('search.html', error_message=e)
 
+        try:
+            image_path = path.join(app.config['UPLOAD_FOLDER'], filename)
+            vector = gen_vector(image_path)
+            remove(image_path)
+        except Exception as e:
+            return render_template('search.html', error_message='Can not genrate Vector.')
+        
 
-        vector = gen_vector(path.join(app.config['UPLOAD_FOLDER'], filename))
-        search_result = client.search(
+        search_result = qdrant_client.search(
             collection_name=COLLECTION_NAME,
             query_vector=vector,
             limit=limit
         )
-        print(f"Search Result: {search_result}")
-
-        remove(path.join(app.config['UPLOAD_FOLDER'], filename))
-        print(f"Cleaned up the uploaded file")
         
-        # Check if the result is empty
         if not search_result:
-            return render_template('image_search.html', error_message='Sorry, we have not found an image in the database.')
+            return render_template('search.html', error_message='Sorry, we have not found an image in the database.')
 
 
         result_images = []
@@ -110,11 +137,10 @@ def upload_search():
             print(f"Image URL: {hit.payload['image_url']}")
             result_images.append(hit.payload['image_url'])
 
-        # Render our find Images
         return render_template('result.html', len=len(result_images), result_images=result_images)
-    
-    # Render the base template (at a get request )
-    return render_template('image_search.html')
+
+    else:
+        return render_template('search.html')
 
 if __name__ == '__main__':
     app.run(debug=FLASK_DEBUG)
