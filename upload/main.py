@@ -1,5 +1,6 @@
 from os import listdir, path
 from csv import DictReader
+from json import dumps
 
 # Own packages 
 from vectorizer import gen_vector
@@ -40,13 +41,31 @@ minio_client = Minio(
 )
 
 def ensure_bucket_exists():
-    """Stellt sicher, dass der Bucket existiert"""
+    """Stellt sicher, dass der Bucket existiert und öffentlich ist"""
     try:
         if not minio_client.bucket_exists(MINIO_BUCKET_NAME):
             minio_client.make_bucket(MINIO_BUCKET_NAME)
             print(f"Bucket '{MINIO_BUCKET_NAME}' wurde erstellt.")
+
+            # Öffentliche Read-Only-Policy setzen
+            policy = {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {"AWS": ["*"]},
+                        "Action": ["s3:GetObject"],
+                        "Resource": [f"arn:aws:s3:::{MINIO_BUCKET_NAME}/*"]
+                    }
+                ]
+            }
+
+            policy_json = dumps(policy)
+            minio_client.set_bucket_policy(MINIO_BUCKET_NAME, policy_json)
+            print(f"Bucket '{MINIO_BUCKET_NAME}' ist nun öffentlich lesbar.")
+
     except S3Error as err:
-        print(f"Fehler beim Erstellen des Buckets: {err}")
+        print(f"Fehler beim Erstellen oder Konfigurieren des Buckets: {err}")
 
 def upload_image(image_path, object_name=None):
     """
@@ -69,6 +88,7 @@ def upload_image(image_path, object_name=None):
             MINIO_BUCKET_NAME,
             object_name,
             image_path,
+            content_type="image/jpeg"
         )
 
         url = f"http://{MINIO_URL}/{MINIO_BUCKET_NAME}/{object_name}"
@@ -105,7 +125,6 @@ for filename in tqdm(image_files, desc="Bilder werden vektorisiert"):
             id=point_id,
             vector=image_vector.tolist(),
             payload={
-                "image_path": full_path,
                 "image_url": image_url,
                 "caption": caption
             }
