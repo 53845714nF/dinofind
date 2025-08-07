@@ -56,7 +56,8 @@
     <nav class="bg-white shadow pt-5 pb-3">
         <div class="max-w-screen-xl mx-auto px-7 flex items-center gap-x-28">
             <div class="flex items-center space-x-1">
-                <img src="{{ url_for('static', filename='img/logo_transparent.png') }}" alt="DinoFind Logo" class="h-10 w-10">
+                <img src="{{ url_for('static', filename='img/logo_transparent.png') }}" alt="DinoFind Logo"
+                    class="h-10 w-10">
                 <span class="text-xl font-semibold text-gray-800">DinoFind</span>
             </div>
 
@@ -66,20 +67,25 @@
             </div>
         </div>
     </nav>
+    <!-- Error Message -->
+    {% if error_message %}
+    <div class="fixed inset-0 flex items-center justify-center z-50">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative flex items-start gap-3 max-w-md w-full mx-4"
+            role="alert">
+            <i data-lucide="alert-triangle" class="w-5 h-5 mt-0.5 flex-shrink-0 text-red-500"></i>
+            <span class="block sm:inline flex-grow">{{ error_message }}</span>
+            <button onclick="document.location.href='/'" class="text-red-700 hover:text-red-900 ml-2">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+    {% endif %}
 
     <!-- Main Content -->
     <main class="flex-grow flex items-center justify-center max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {% block main %}{% endblock %}
     </main>
 
-    <!-- Error Message -->
-    {% if error_message %}
-    <div class="fixed bottom-0 right-0 m-8">
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <span class="block sm:inline">{{ error_message }}</span>
-        </div>
-    </div>
-    {% endif %}
 
     <!-- Footer -->
     <footer class="bg-gray-900 text-gray-200">
