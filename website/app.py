@@ -49,6 +49,17 @@ def get_image(request: Request):
     if '.' not in filename:
         raise Exception('Please select an valid image you would like to search.')
 
+    # Check MIME-Type
+    if not file.mimetype.startswith('image/'):
+        raise Exception('Invalid image MIME type.')
+
+    # Check file size
+    file.seek(0, 2)  # Move to end of file
+    file_length = file.tell()
+    file.seek(0)     # Reset file pointer to start
+    if file_length > 5:
+        raise Exception(f'Image is too large. Maximum size allowed is 5 MB.')
+    
     file.save(path.join(app.config['UPLOAD_FOLDER'], filename))
 
     return filename
@@ -63,21 +74,12 @@ def get_limit(request: Request):
         limit = 1
     return limit
 
-
-def get_image_count():
-    """
-    Get the number of images in the collection (Qdrant).
-    """
-    collection_info = qdrant_client.get_collection(COLLECTION_NAME)
-    return collection_info.points_count
-
-
 @app.route('/', methods=['GET'])
 def home():
     """
     Render the home page.
     """
-    return render_template('search.html', image_count=get_image_count())
+    return render_template('search.html')
 
 @app.route('/privacy', methods=['GET'])
 def privacy():
