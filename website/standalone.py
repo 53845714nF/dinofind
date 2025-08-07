@@ -29,5 +29,6 @@ if __name__ == '__main__':
     options = {
         'bind': '%s:%s' % ('0.0.0.0', '10000'),
         'workers': number_of_workers(),
+        'worker_class': 'gthread'
     }
     StandaloneApplication(app, options).run()
