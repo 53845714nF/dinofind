@@ -17,11 +17,12 @@ COLLECTION_NAME = "images"
 QDRANT_HOST = getenv('QDRANT_HOST', 'localhost')  # 'qdrant' ist der Service-Name
 QDRANT_PORT = getenv('QDRANT_PORT', '6333')
 QDRANT_API_KEY = getenv('QDRANT_API_KEY', None)
+QDRANT_HTTPS = getenv('QDRANT_HTTPS', bool('')) # Default False
 
-FLASK_DEBUG = getenv('FLASK_DEBUG', bool(''))
+FLASK_DEBUG = getenv('FLASK_DEBUG', bool('')) # Default False
 FLASK_SECRET_KEY = getenv('FLASK_SECRET_KEY', random_string)
 
-qdrant_client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT, api_key=QDRANT_API_KEY)
+qdrant_client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT, api_key=QDRANT_API_KEY, https=QDRANT_HTTPS)
 
 app = Flask(__name__, template_folder='templates', static_folder='statics')
 app.config['SECRET_KEY'] = FLASK_SECRET_KEY
