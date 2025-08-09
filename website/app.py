@@ -54,10 +54,13 @@ def get_image(request: Request):
         raise Exception('Invalid image MIME type.')
 
     # Check file size
+    MAX_FILE_SIZE_MB = 5
+    MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
+    
     file.seek(0, 2)  # Move to end of file
     file_length = file.tell()
     file.seek(0)     # Reset file pointer to start
-    if file_length > 5:
+    if file_length > MAX_FILE_SIZE_BYTES:
         raise Exception(f'Image is too large. Maximum size allowed is 5 MB.')
     
     file.save(path.join(app.config['UPLOAD_FOLDER'], filename))
