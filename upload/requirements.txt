@@ -2,6 +2,6 @@ minio==7.2.16
 tqdm==4.67.1
 qdrant-client==1.15.1
 pillow==11.3.0
-torch==2.7.1
+torch==2.8.0
 torchvision==0.22.1
 xformers==0.0.31.post1
