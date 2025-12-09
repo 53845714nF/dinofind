@@ -22,7 +22,7 @@ QDRANT_HTTPS = getenv('QDRANT_HTTPS', bool('')) # Default False
 FLASK_DEBUG = getenv('FLASK_DEBUG', bool('')) # Default False
 FLASK_SECRET_KEY = getenv('FLASK_SECRET_KEY', random_string)
 
-qdrant_client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT, api_key=QDRANT_API_KEY, https=QDRANT_HTTPS)
+qdrant_client = QdrantClient(host=QDRANT_HOST, port=int(QDRANT_PORT), api_key=QDRANT_API_KEY, https=bool(QDRANT_HTTPS))
 
 app = Flask(__name__, template_folder='templates', static_folder='statics')
 app.config['SECRET_KEY'] = FLASK_SECRET_KEY
@@ -35,6 +35,8 @@ def get_image(request: Request):
     Get the uploaded image from the request.
     """
     file = request.files['file']
+    if not file.filename:
+        raise Exception('Filename in None')
     filename = secure_filename(file.filename)
 
     # Check if the File is Empty
@@ -73,9 +75,11 @@ def get_limit(request: Request):
     """
     Get the limit from the request. The limit is the number of images that will be returned.
     """
-    limit = request.form.get("limit", type=int)
+    limit = request.form.get("limit", type=int) or 1
+
     if limit <= 0:
         limit = 1
+
     return limit
 
 @app.route('/', methods=['GET'])
@@ -128,11 +132,13 @@ def upload_search():
             return render_template('search.html', error_message='Can not genrate Vector.')
         
 
-        search_result = qdrant_client.search(
+        search_result = qdrant_client.query_points(
             collection_name=COLLECTION_NAME,
-            query_vector=vector,
+            query=vector,
             limit=limit
         )
+
+        qdrant_client.search_matrix_offsets
         
         if not search_result:
             return render_template('search.html', error_message='Sorry, we have not found an image in the database.')
