@@ -138,16 +138,17 @@ def upload_search():
             limit=limit
         )
 
-        qdrant_client.search_matrix_offsets
-        
         if not search_result:
             return render_template('search.html', error_message='Sorry, we have not found an image in the database.')
 
 
         result_images = []
-        for hit in search_result:
-            print(f"Image URL: {hit.payload['image_url']}")
-            result_images.append(hit.payload['image_url'])
+        for point in search_result.points:
+            if point.payload and 'image_url' in point.payload:
+                print(f"Image URL: {point.payload['image_url']}")
+                result_images.append(point.payload['image_url'])
+            else:
+                return render_template('search.html', error_message='Sorry, we have not found an image point in the database.')
 
         return render_template('result.html', len=len(result_images), result_images=result_images)
 
