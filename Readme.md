@@ -1,3 +1,6 @@
+> [!WARNING]  
+> The following repository is no longer maintained. A new, improved version is available at: https://github.com/53845714nF/dinofind2
+
 <div align="center">
     <h1> 🦕 Dinofind </h1>
     <p>⚡ A website that allows users to search for images based on images. 🔍</p>
